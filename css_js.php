@@ -6,6 +6,8 @@
 <link rel="stylesheet" href="css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 <!-- Datepicker CSS -->
 <link rel="stylesheet" href="datepicker/css/datepicker.css">
+<!-- General CSS -->
+<link rel="stylesheet" href="css/general.css">
 
 
 <script src="js/jquery-3.1.1.slim.min.js"  crossorigin="anonymous"></script>
