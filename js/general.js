@@ -1,5 +1,10 @@
 $(document).ready(function () {
     console.log("ready!");
+$(".navbar-nav").on("click", function(){
+    console.log("click nav");
+   $("li.active").removeClass("active");
+   $(this).addClass("active");
+});
     $('.datepicker').datepicker({
         format: 'dd/mm/yyyy',
         startDate: '-3d'

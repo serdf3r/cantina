@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <?php include 'config.php'; ?>
-        <?php include 'css_js.php'; ?>
-    </head>
-    <body>
-        <?php
-        include "nav.php";
-        include "main_form.php";
-        ?>
-
+<?php
+include 'general_top.php';
+            
+            ?>
+        </div>
         <canvas id="chart_temperature" width="400" height="100"></canvas>
         <canvas id="chart_umidity" width="400" height="100"></canvas>
             <?php
@@ -19,7 +12,8 @@
                 $type_of_chart = 'line';
             }
             if (!isset($_POST["dal"]) || $_POST["dal"] == '') {
-                $dal_rec = '01/01/2018';
+                $dal_rec = date('d/m/Y', strtotime('-6 months'));
+                ;
             } else {
                 $dal_rec = $_POST["dal"];
             }
@@ -28,9 +22,9 @@
             } else {
                 $al_rec = $_POST["al"];
             }
-            print_r($dal_rec);
+            //print_r($dal_rec);
             $dal_query = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dal_rec)));
-            print_r($dal_query);
+            //print_r($dal_query);
             $al_query = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $al_rec)));
             // Create connection
             $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -41,7 +35,7 @@
 //SELECT count(*), DATE_FORMAT(TIME,"%Y-%m-%d") FROM `GEN_AMB_TEMP_UMI` GROUP BY DATE_FORMAT(TIME,"%Y-%m-%d")
 //SELECT DATE_FORMAT(TIME,"%Y-%m-%d") AS TIME, AVG(TEMPERATURE) AS TEMPERATURE, AVG(UMIDITY) AS UMIDITY FROM `GEN_AMB_TEMP_UMI` GROUP BY DATE_FORMAT(TIME,"%Y-%m-%d")
             $sql = "SELECT DATE_FORMAT(TIME,'%Y-%m-%d') AS GIORNO, AVG(TEMPERATURE) AS TEMPERATURE FROM `GEN_AMB_TEMP_UMI`  WHERE TIME between '$dal_query' and '$al_query' GROUP BY DATE_FORMAT(TIME,'%Y-%m-%d') ORDER BY 'TIME' ASC ";
-       
+
             $result = mysqli_query($conn, $sql);
             $label = '[';
             $temperatura = '[';
@@ -151,5 +145,5 @@
             });
         </script>
 
-    </body>
-</html>
+<?php include 'general_bottom.php'; ?>
+   

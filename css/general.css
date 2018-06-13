@@ -1,3 +1,12 @@
+
+html, body {
+  margin: 5px;
+}
+
+.footer {
+   margin: 5px;
+} 
 .row_ute{margin: 2px;}
 .row_gest{margin: 2px;}
 .row_gest button{margin: 2px;}
+.dati_generali{list-style-type: none;}

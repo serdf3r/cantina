@@ -1,5 +1,5 @@
 <div class="navbar main_menu ">
-    <form action="gestione_bottiglie.php" method="post">
+    <form action="gestione_bottiglie_response.php" method="post">
         <div class="form-group">
             <div class=" row">
                 <label for="anno_vino" class="col-sm-1 control-label">Anno</label>

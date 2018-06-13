@@ -1,0 +1,496 @@
+
+//        $qry = "
+//	with ATTI_RIC as (SELECT DISTINCT d.pk_coduff,
+//		d.pk_anno,
+//		d.pk_regpart,
+//		d.pk_ident_imm,
+//		d.pk_graffato
+//		FROM DL03_COMPRAVENDITE_SIT d,
+//    	REG06_IMMOBILI_CONSERVATORIE reg,
+//	nsit.sit05e_fabbricati sit05
+//		WHERE d.flag_elaborato = 8 
+//		AND d.pk_coduff=reg.pk_coduff (+)
+//	    AND d.pk_anno=reg.pk_anno (+)
+//	    AND d.pk_regpart=reg.pk_regpart (+)
+//	    AND d.pk_ident_imm=reg.pk_ident_imm (+)				
+//		AND to_char(d.datatit,'yyyymmdd')>to_char(add_months(sysdate,-9),'yyyymmdd')
+//    	AND d.datapres BETWEEN TO_DATE (:dataPresDa, 'dd/mm/yyyy')
+//                                       AND TO_DATE (:dataPresA, 'dd/mm/yyyy')
+//				and sit05.cod_comune = d.cod_naz
+//                   AND sit05.sezione_censuaria_urb = d.sez_cens
+//                   AND sit05.sezione_urbana = d.sez_urb
+//                   AND sit05.foglio = d.foglio
+//                   AND sit05.num_part = d.numero
+//                   AND sit05.denom_part = d.denominatore ";
+//
+//
+//        if ($this->codNaz != "") {
+//            $qry .= " AND d.cod_naz = :COD_NAZ ";
+//        }
+//
+//        if ($this->destinazione == 'R' && $this->codCat == '0') {
+//            $qry .= " AND (d.cat_imm IN ('A01','A02','A03','A04','A05','A06','A07','A08','A09','A11') or (d.CAT_IMM IN ('C06','C07') AND d.MQ <= 50) or (d.CAT_IMM= 'C02' AND d.MQ <= 30)) ";
+//        } elseif ($this->destinazione == 'R' && (($this->codCat != 'C06') && ($this->codCat != 'C07') && ($this->codCat != 'C02'))) {
+//            $qry .= " AND d.cat_imm = :codCat";
+//        } elseif ($this->destinazione == 'R' && (($this->codCat == 'C06') || ($this->codCat == 'C07'))) {
+//            $qry .= " AND (d.cat_imm = :codCat AND d.MQ <= 50) ";
+//        } elseif ($this->destinazione == 'R' && ($this->codCat == 'C02')) {
+//            $qry .= " AND (d.cat_imm = :codCat AND d.MQ <= 30) ";
+//        }
+//
+//        if ($this->destinazione == 'A' && $this->codCat == '0') {
+//            $qry .= " AND (d.cat_imm IN ('A01','A02','A03','A04','A05','A06','A07','A08','A09','A11')) ";
+//        } elseif ($this->destinazione == 'A' && $this->codCat != '0') {
+//            $qry .= " AND d.cat_imm = :codCat";
+//        }
+//
+//        if ($this->destinazione == 'Q' && $this->codCat == '0') {
+//            $qry .= " AND (d.cat_imm IN ('C06','C07') AND d.MQ <= 50) ";
+//        } elseif ($this->destinazione == 'Q' && $this->codCat == 'C06') {
+//            $qry .= " AND d.cat_imm = 'C06' AND d.MQ <= 50";
+//        } elseif ($this->destinazione == 'Q' && $this->codCat == 'C07') {
+//            $qry .= " AND d.cat_imm = 'C07' AND d.MQ <= 50";
+//        }
+//
+//        if ($this->destinazione == 'C' && $this->codCat == '0') {
+//            $qry .= " AND (d.cat_imm = 'C01' or (d.cat_imm= 'C02' AND d.MQ > 30) or (d.cat_imm IN ('C06','C07') AND d.MQ > 50))";
+//        } elseif ($this->destinazione == 'C' && $this->codCat == 'C01') {
+//            $qry .= " AND d.cat_imm = 'C01'";
+//        } elseif ($this->destinazione == 'C' && $this->codCat == 'C02') {
+//            $qry .= " AND d.cat_imm = 'C02' AND d.MQ > 30";
+//        } elseif ($this->destinazione == 'C' && $this->codCat == 'C06') {
+//            $qry .= " AND d.cat_imm = 'C06' AND d.MQ > 50";
+//        } elseif ($this->destinazione == 'C' && $this->codCat == 'C07') {
+//            $qry .= " AND d.cat_imm = 'C07' AND d.MQ > 50";
+//        }
+//
+//        if ($this->destinazione == 'T' && $this->codCat == '0') {
+//            $qry .= " AND (d.cat_imm IN ('A10')) ";
+//        } elseif ($this->destinazione == 'T' && $this->codCat != '0') {
+//            $qry .= " AND d.cat_imm = :codCat";
+//        }
+//
+//        if ($this->destinazione == 'P' && $this->codCat == '0') {
+//            $qry .= " AND (d.cat_imm IN ('D01','C03')) ";
+//        } elseif ($this->destinazione == 'P' && $this->codCat != '0') {
+//            $qry .= " AND d.cat_imm = :codCat";
+//        }
+//
+//        if ($this->zonaOmi != '0') {
+//            $qry .= " and sit05.zona_omi = :zonaOmi ";
+//        }
+//
+//        // Condizioni su dataAtto.
+//        if ($this->dataAttoDa = '' && $this->dataAttoA != '') {
+//            $qry .= " AND  d.DATATIT BETWEEN TO_DATE(:periodo_atto_da,'dd/mm/yyyy') AND TO_DATE(:periodo_atto_a,'dd/mm/yyyy') ";
+//        }
+//
+//        // Condizioni su foglio U (fabbrivato urbano)
+//        // Se Tipo_Foglio = 'U'
+//        if ($this->terrenoFabbricato == 'U') {
+//            if (($this->sezCens != '') && ($this->sezUrb != '') && ($this->foglio != '')) {
+//                if (($this->sezCens != '0') && ($this->sezUrb != '0') && ($this->foglio != '0')) {
+//                    $qry .= " AND d.SEZ_CENS= :sezCens and d.SEZ_URB = :sezUrb and d.FOGLIO= :foglio ";
+//                } elseif (($this->sezCens != '0') && ($this->sezUrb != '0') && ($this->foglio == '0')) {
+//                    $qry .= " AND d.SEZ_CENS= :sezCens and d.SEZ_URB = :sezUrb ";
+//                } elseif (($this->sezCens != '0') && ($this->sezUrb == '0') && ($this->foglio == '0')) {
+//                    $qry .= " AND d.SEZ_CENS= :sezCens ";
+//                }
+//            }
+//        }
+//
+//        // Condizioni su foglio T (terreno)
+//        // Se Tipo_Foglio = 'T'
+//        if ($this->terrenoFabbricato == 'T') {
+//            if (($this->sezTer != '') && ($this->foglioTer != '')) {
+//                if (($this->sezTer != '0') && ($this->foglioTer != '0')) {
+//                    $qry .= " AND d.SEZ_CENS_TERR= :sezCensTer and d.FOGLIO_TERR= :foglioTer ";
+//                } elseif (($this->sezTer != '0') && ($this->foglioTer == '0')) {
+//                    $qry .= " AND d.SEZ_CENS_TERR= :sezCensTer ";
+//                }
+//            }
+//        }
+//
+//        // condizioni su  Prezzo = �Atti con prezzo"
+//        if ($this->prezzo == "P") {
+//            $qry .= " AND  reg.prezzo is not null ";
+//        }
+//
+//        if ($this->quota == "P") {
+//            $qry .= " AND  d.quota = 1 ";
+//        }
+//
+//        $qry .= "  ) 
+//				
+//		(SELECT DISTINCT DECODE (a.cat_imm, 'C02', (CASE WHEN a.mq <= 30
+//                      THEN 'G'
+//                      ELSE DECODE (TO_CHAR (a.key_anno_solare), '', 'V', 'X')
+//                  END), DECODE (TO_CHAR (a.key_anno_solare), '', 'V', 'X')) AS scheda,  
+//		a.pk_coduff,
+//	    a.pk_anno,
+//	    a.pk_regpart,
+//	    a.pk_ident_imm,
+//		a.pk_graffato,
+//	    a.diritto,
+//	    a.quota,
+//	    a.provincia,
+//	    a.cod_naz,
+//	    a.natura,
+//		'Reg.part ' || a.pk_regpart || ' del ' || to_char (a.datatit, 'dd/mm/yyyy') AS denominazione, 
+//		to_char(a.datapres,'dd/mm/yyyy') datapres,
+//		to_char(a.datatit,'dd/mm/yyyy') datatit,
+//		to_char(a.datatit,'yyyymmdd') datatitord,
+//		to_char(a.datatit,'dd/mm/yyyy') dataatto,
+//		a.sez_cens,
+//		a.sez_urb,
+//		a.foglio,
+//		a.numero,
+//		a.sub,
+//		a.denominatore,
+//		a.prov_cat,
+//		a.cod_cat,
+//		a.cat_imm,
+//		a.mq,
+//		a.mc,
+//		a.vani,
+//		a.classe,
+//		a.superficie,
+//		a.sup_stimata,
+//		a.rendita_sit,
+//		a.partita,
+//		a.id_uiu,
+//		a.stadio,
+//		a.cod_destinazione,
+//		a.cod_tipologia,
+//		a.chiave_pln,
+//		a.prog_pln,
+//		a.chiave_elab_pln,
+//		a.prog_elab_pln,
+//		a.semestre,
+//		a.icona,
+//		a.denominazione_estesa,
+//		a.codice_civico,
+//		a.id_indirizzo,
+//		a.posizionamento.sdo_point.x posizionamento_x,
+//		a.posizionamento.sdo_point.y posizionamento_y,
+//		a.flag_posizionamento,
+//		a.flag_elaborato,
+//		a.piano,
+//    reg.prezzo prezzo,
+//		a.key_anno_solare,
+//        a.KEY_PROV_ANNO_SOLARE,
+//        a.KEY_NUM_ANNO_SOLARE,
+//		sit05.zona_omi,		
+//    'X'  ricercato
+//     
+//from DL03_COMPRAVENDITE_SIT a,
+//    REG06_IMMOBILI_CONSERVATORIE reg,
+//	ATTI_RIC b,
+//	nsit.sit05e_fabbricati sit05
+//				
+//where a.pk_coduff = b.pk_coduff and
+//      a.pk_anno = b.pk_anno and
+//      a.pk_regpart = b.pk_regpart
+//	and sit05.zona_omi is not null
+//	and a.flag_elaborato = 8
+//	and a.posizionamento is not null
+//	AND a.pk_ident_imm=b.pk_ident_imm
+//	    AND a.pk_coduff=reg.pk_coduff (+)
+//    AND a.pk_anno=reg.pk_anno (+)
+//    AND a.pk_regpart=reg.pk_regpart (+)
+//    AND a.pk_ident_imm=reg.pk_ident_imm (+)
+//	
+//	and sit05.cod_comune = a.cod_naz
+//                   AND sit05.sezione_censuaria_urb = a.sez_cens
+//                   AND sit05.sezione_urbana = a.sez_urb
+//                   AND sit05.foglio = a.foglio
+//                   AND sit05.num_part = a.numero
+//                   AND sit05.denom_part = a.denominatore 
+//				)
+//	union
+//				(SELECT DISTINCT DECODE (a.cat_imm, 'C02', (CASE WHEN a.mq <= 30
+//                      THEN 'G'
+//                      ELSE DECODE (TO_CHAR (a.key_anno_solare), '', 'V', 'X')
+//                  END), DECODE (TO_CHAR (a.key_anno_solare), '', 'V', 'X')) AS scheda, 
+//		a.pk_coduff,
+//	    a.pk_anno,
+//	    a.pk_regpart,
+//	    a.pk_ident_imm,
+//		a.pk_graffato,
+//	    a.diritto,
+//	    a.quota,
+//	    a.provincia,
+//	    a.cod_naz,
+//	    a.natura,
+//		'Reg.part ' || a.pk_regpart || ' del ' || to_char (a.datatit, 'dd/mm/yyyy') AS denominazione, 
+//		to_char(a.datapres,'dd/mm/yyyy') datapres,
+//		to_char(a.datatit,'dd/mm/yyyy') datatit,
+//		to_char(a.datatit,'yyyymmdd') datatitord,
+//		to_char(a.datatit,'dd/mm/yyyy') dataatto,
+//		a.sez_cens,
+//		a.sez_urb,
+//		a.foglio,
+//		a.numero,
+//		a.sub,
+//		a.denominatore,
+//		a.prov_cat,
+//		a.cod_cat,
+//		a.cat_imm,
+//		a.mq,
+//		a.mc,
+//		a.vani,
+//		a.classe,
+//		a.superficie,
+//		a.sup_stimata,
+//		a.rendita_sit,
+//		a.partita,
+//		a.id_uiu,
+//		a.stadio,
+//		a.cod_destinazione,
+//		a.cod_tipologia,
+//		a.chiave_pln,
+//		a.prog_pln,
+//		a.chiave_elab_pln,
+//		a.prog_elab_pln,
+//		a.semestre,
+//		a.icona,
+//		a.denominazione_estesa,
+//		a.codice_civico,
+//		a.id_indirizzo,
+//		a.posizionamento.sdo_point.x posizionamento_x,
+//		a.posizionamento.sdo_point.y posizionamento_y,
+//		a.flag_posizionamento,
+//		a.flag_elaborato,
+//		a.piano,
+//    reg.prezzo prezzo,
+//		a.key_anno_solare,
+//        a.KEY_PROV_ANNO_SOLARE,
+//        a.KEY_NUM_ANNO_SOLARE,
+//				sit05.zona_omi,	
+//    ''  ricercato
+//     
+//from DL03_COMPRAVENDITE_SIT a,
+//    REG06_IMMOBILI_CONSERVATORIE reg,
+//	ATTI_RIC b,
+//	nsit.sit05e_fabbricati sit05
+//where a.pk_coduff = b.pk_coduff and
+//      a.pk_anno = b.pk_anno and
+//      a.pk_regpart = b.pk_regpart
+//	and sit05.zona_omi is not null
+//	and a.flag_elaborato = 8
+//	and a.posizionamento is not null
+//	AND a.pk_coduff||a.pk_anno||a.pk_regpart||a.pk_ident_imm not in (select c.pk_coduff||c.pk_anno||c.pk_regpart||c.pk_ident_imm from ATTI_RIC c)
+//	    AND a.pk_coduff=reg.pk_coduff (+)
+//    AND a.pk_anno=reg.pk_anno (+)
+//    AND a.pk_regpart=reg.pk_regpart (+)
+//    AND a.pk_ident_imm=reg.pk_ident_imm (+)
+//	
+//	and sit05.cod_comune = a.cod_naz
+//                   AND sit05.sezione_censuaria_urb = a.sez_cens
+//                   AND sit05.sezione_urbana = a.sez_urb
+//                   AND sit05.foglio = a.foglio
+//                   AND sit05.num_part = a.numero
+//                   AND sit05.denom_part = a.denominatore 
+//                   
+//				)
+//				
+//	order by datatitord desc, pk_coduff, pk_anno, pk_regpart desc, pk_ident_imm, foglio desc, numero desc, sub desc  ";
+//           $qry ="
+//with ATTI_RIC as (SELECT DISTINCT d.pk_coduff,d.pk_anno,
+//		d.pk_regpart,
+//		d.pk_ident_imm,
+//		d.pk_graffato
+//		FROM DL03_COMPRAVENDITE_SIT d,
+//    	REG06_IMMOBILI_CONSERVATORIE reg,
+//        nsit.sit05e_fabbricati sit05
+//		WHERE d.flag_elaborato = 8 
+//		AND d.pk_coduff=reg.pk_coduff (+)
+//	    AND d.pk_anno=reg.pk_anno (+)
+//	    AND d.pk_regpart=reg.pk_regpart (+)
+//	    AND d.pk_ident_imm=reg.pk_ident_imm (+)				
+//		AND to_char(d.datatit,'yyyymmdd')>to_char(add_months(sysdate,-9),'yyyymmdd')
+//    	AND d.datapres BETWEEN TO_DATE ('25/01/2016', 'dd/mm/yyyy')
+//                                       AND TO_DATE ('26/01/2016', 'dd/mm/yyyy')
+//				and sit05.cod_comune = d.cod_naz
+//                   AND sit05.sezione_censuaria_urb = d.sez_cens
+//                   AND sit05.sezione_urbana = d.sez_urb
+//                   AND sit05.foglio = d.foglio
+//                   AND sit05.num_part = d.numero
+//                   AND d.cat_imm = 'A03'
+//                   AND d.pk_regpart = 5878
+//                   AND sit05.denom_part = d.denominatore  AND d.cod_naz = 'H501'  AND (d.cat_imm IN ('A01','A02','A03','A04','A05','A06','A07','A08','A09','A11') or (d.CAT_IMM IN ('C06','C07') AND d.MQ <= 50) or (d.CAT_IMM= 'C02' AND d.MQ <= 30))   ) 
+//				
+//		(SELECT DISTINCT DECODE (a.cat_imm, 'C02', (CASE WHEN a.mq <= 30
+//                      THEN 'G'
+//                      ELSE DECODE (TO_CHAR (a.key_anno_solare), '', 'V', 'X')
+//                  END), DECODE (TO_CHAR (a.key_anno_solare), '', 'V', 'X')) AS scheda,  
+//		a.pk_coduff,
+//	    a.pk_anno,
+//	    a.pk_regpart,
+//	    a.pk_ident_imm,
+//		a.pk_graffato,
+//	    a.diritto,
+//	    a.quota,
+//	    a.provincia,
+//	    a.cod_naz,
+//	    a.natura,
+//		'Reg.part ' || a.pk_regpart || ' del ' || to_char (a.datatit, 'dd/mm/yyyy') AS denominazione, 
+//		to_char(a.datapres,'dd/mm/yyyy') datapres,
+//		to_char(a.datatit,'dd/mm/yyyy') datatit,
+//		to_char(a.datatit,'yyyymmdd') datatitord,
+//		to_char(a.datatit,'dd/mm/yyyy') dataatto,
+//		a.sez_cens,
+//		a.sez_urb,
+//		a.foglio,
+//		a.numero,
+//		a.sub,
+//		a.denominatore,
+//		a.prov_cat,
+//		a.cod_cat,
+//		a.cat_imm,
+//		a.mq,
+//		a.mc,
+//		a.vani,
+//		a.classe,
+//		a.superficie,
+//		a.sup_stimata,
+//		a.rendita_sit,
+//		a.partita,
+//		a.id_uiu,
+//		a.stadio,
+//		a.cod_destinazione,
+//		a.cod_tipologia,
+//		a.chiave_pln,
+//		a.prog_pln,
+//		a.chiave_elab_pln,
+//		a.prog_elab_pln,
+//		a.semestre,
+//		a.icona,
+//		a.denominazione_estesa,
+//		a.codice_civico,
+//		a.id_indirizzo,
+//		a.posizionamento.sdo_point.x posizionamento_x,
+//		a.posizionamento.sdo_point.y posizionamento_y,
+//		a.flag_posizionamento,
+//		a.flag_elaborato,
+//		a.piano,
+//    reg.prezzo prezzo,
+//		a.key_anno_solare,
+//        a.KEY_PROV_ANNO_SOLARE,
+//        a.KEY_NUM_ANNO_SOLARE,
+//		sit05.zona_omi,		
+//    'X'  ricercato
+//     
+//from DL03_COMPRAVENDITE_SIT a,
+//    REG06_IMMOBILI_CONSERVATORIE reg,
+//	ATTI_RIC b,
+//	nsit.sit05e_fabbricati sit05
+//				
+//where a.pk_coduff = b.pk_coduff and
+//      a.pk_anno = b.pk_anno and
+//      a.pk_regpart = b.pk_regpart
+//	and sit05.zona_omi is not null
+//	and a.flag_elaborato = 8
+//	and a.posizionamento is not null
+//	AND a.pk_ident_imm=b.pk_ident_imm
+//	    AND a.pk_coduff=reg.pk_coduff (+)
+//    AND a.pk_anno=reg.pk_anno (+)
+//    AND a.pk_regpart=reg.pk_regpart (+)
+//    AND a.pk_ident_imm=reg.pk_ident_imm (+)
+//	
+//	and sit05.cod_comune = a.cod_naz
+//                   AND sit05.sezione_censuaria_urb = a.sez_cens
+//                   AND sit05.sezione_urbana = a.sez_urb
+//                   AND sit05.foglio = a.foglio
+//                   AND sit05.num_part = a.numero
+//                   AND sit05.denom_part = a.denominatore 
+//				)
+//	union
+//				(SELECT DISTINCT DECODE (a.cat_imm, 'C02', (CASE WHEN a.mq <= 30
+//                      THEN 'G'
+//                      ELSE DECODE (TO_CHAR (a.key_anno_solare), '', 'V', 'X')
+//                  END), DECODE (TO_CHAR (a.key_anno_solare), '', 'V', 'X')) AS scheda, 
+//		a.pk_coduff,
+//	    a.pk_anno,
+//	    a.pk_regpart,
+//	    a.pk_ident_imm,
+//		a.pk_graffato,
+//	    a.diritto,
+//	    a.quota,
+//	    a.provincia,
+//	    a.cod_naz,
+//	    a.natura,
+//		'Reg.part ' || a.pk_regpart || ' del ' || to_char (a.datatit, 'dd/mm/yyyy') AS denominazione, 
+//		to_char(a.datapres,'dd/mm/yyyy') datapres,
+//		to_char(a.datatit,'dd/mm/yyyy') datatit,
+//		to_char(a.datatit,'yyyymmdd') datatitord,
+//		to_char(a.datatit,'dd/mm/yyyy') dataatto,
+//		a.sez_cens,
+//		a.sez_urb,
+//		a.foglio,
+//		a.numero,
+//		a.sub,
+//		a.denominatore,
+//		a.prov_cat,
+//		a.cod_cat,
+//		a.cat_imm,
+//		a.mq,
+//		a.mc,
+//		a.vani,
+//		a.classe,
+//		a.superficie,
+//		a.sup_stimata,
+//		a.rendita_sit,
+//		a.partita,
+//		a.id_uiu,
+//		a.stadio,
+//		a.cod_destinazione,
+//		a.cod_tipologia,
+//		a.chiave_pln,
+//		a.prog_pln,
+//		a.chiave_elab_pln,
+//		a.prog_elab_pln,
+//		a.semestre,
+//		a.icona,
+//		a.denominazione_estesa,
+//		a.codice_civico,
+//		a.id_indirizzo,
+//		a.posizionamento.sdo_point.x posizionamento_x,
+//		a.posizionamento.sdo_point.y posizionamento_y,
+//		a.flag_posizionamento,
+//		a.flag_elaborato,
+//		a.piano,
+//    reg.prezzo prezzo,
+//		a.key_anno_solare,
+//        a.KEY_PROV_ANNO_SOLARE,
+//        a.KEY_NUM_ANNO_SOLARE,
+//				sit05.zona_omi,	
+//    ''  ricercato
+//     
+//from DL03_COMPRAVENDITE_SIT a,
+//    REG06_IMMOBILI_CONSERVATORIE reg,
+//	ATTI_RIC b,
+//	nsit.sit05e_fabbricati sit05
+//where a.pk_coduff = b.pk_coduff and
+//      a.pk_anno = b.pk_anno and
+//      a.pk_regpart = b.pk_regpart
+//	and sit05.zona_omi is not null
+//	and a.flag_elaborato = 8
+//	and a.posizionamento is not null
+//	AND a.pk_coduff||a.pk_anno||a.pk_regpart||a.pk_ident_imm not in (select c.pk_coduff||c.pk_anno||c.pk_regpart||c.pk_ident_imm from ATTI_RIC c)
+//	    AND a.pk_coduff=reg.pk_coduff (+)
+//    AND a.pk_anno=reg.pk_anno (+)
+//    AND a.pk_regpart=reg.pk_regpart (+)
+//    AND a.pk_ident_imm=reg.pk_ident_imm (+)
+//	
+//	and sit05.cod_comune = a.cod_naz
+//                   AND sit05.sezione_censuaria_urb = a.sez_cens
+//                   AND sit05.sezione_urbana = a.sez_urb
+//                   AND sit05.foglio = a.foglio
+//                   AND sit05.num_part = a.numero
+//                   AND sit05.denom_part = a.denominatore 
+//                   
+//				)
+//				
+//	order by datatitord desc, pk_coduff, pk_anno, pk_regpart desc, pk_ident_imm, foglio desc, numero desc, sub desc    ";
+//        
