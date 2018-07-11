@@ -65,8 +65,84 @@ $(document).ready(function () {
         }
         $(".totale_persone").val($(".container_member .row_ute").length);
     }
-     $('#tab_vendemmie').DataTable();
-     $('#tab_vini').DataTable();
-     $('#tab_analisi').DataTable();
-     $('#tab_laboratori').DataTable();
+    $('#tab_vendemmie').DataTable();
+    $('#tab_vini').DataTable({
+        "scrollX": true
+    });
+    $('#tab_analisi').DataTable({
+        "scrollX": true
+    });
+    $('#tab_laboratori').DataTable();
+
+    $('#inserimento_vendemmia :input').keydown(function (e) {
+        console.log("Element changed inserimento_vendemmia");
+        if ($("#vendemmia_data").val() == '' || $("#vendemmia_luogo").val() == '') {
+            $('#inserimento_vendemmia .btn-primary').addClass('disabled');
+        } else {
+            $('#inserimento_vendemmia .btn-primary').removeClass('disabled');
+        }
+
+    });
+    $('#inserimento_vendemmia').submit(function (event) {
+        if ($("#vendemmia_data").val() == '' || $("#vendemmia_luogo").val() == '') {
+           alert("Data e Luogo non possono essere vuoti");           
+            return false;            
+        } else {
+            return;
+        }
+    });
+    
+     $('#inserimento_vino :input').keydown(function (e) {
+        console.log("Element changed inserimento_vino");
+        if ($("#vino_nome").val() == '') {
+            $('#inserimento_vino .btn-primary').addClass('disabled');
+        } else {
+            $('#inserimento_vino .btn-primary').removeClass('disabled');
+        }
+
+    });
+    $('#inserimento_vino').submit(function (event) {
+        if ($("#vino_nome").val() == '') {
+           alert("Il nome del vino non può essere vuoto");           
+            return false;            
+        } else {
+            return;
+        }
+    });
+    
+     $('#inserimento_analisi :input').keydown(function (e) {
+        console.log("Element changed inserimento_analisi");
+        if ($("#analisi_data").val() == '') {
+            $('#inserimento_analisi .btn-primary').addClass('disabled');
+        } else {
+            $('#inserimento_analisi .btn-primary').removeClass('disabled');
+        }
+
+    });
+    $('#inserimento_analisi').submit(function (event) {
+        if ($("#analisi_data").val() == '') {
+           alert("La Data non può essere vuota");           
+            return false;            
+        } else {
+            return;
+        }
+    });
+    
+     $('#inserimento_laboratorio :input').keydown(function (e) {
+        console.log("Element changed inserimento_laboratorio");
+        if ($("#laboratorio_nome").val() == '' ) {
+            $('#inserimento_laboratorio .btn-primary').addClass('disabled');
+        } else {
+            $('#inserimento_laboratorio .btn-primary').removeClass('disabled');
+        }
+
+    });
+    $('#inserimento_laboratorio').submit(function (event) {
+        if ($("#laboratorio_nome").val() == '') {
+           alert("Il nome non può essere vuoto");           
+            return false;            
+        } else {
+            return;
+        }
+    });
 });

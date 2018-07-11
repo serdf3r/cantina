@@ -7,14 +7,19 @@ $vendemmie = '';
 $vini = '';
 $analisi = '';
 $laboratori = '';
-if (isset($_GET['cat'])) {  
-    $sql = "DELETE FROM " . strtoupper($_GET['cat']) . " WHERE ID=" . $_GET['ID'] . "";
+if (isset($_GET['cat'])) {
+    if (isset($_GET['type']) && $_GET['type'] == 'del') {
+        $sql = "DELETE FROM " . strtoupper($_GET['cat']) . " WHERE ID=" . $_GET['ID'] . "";
 
-    $result = mysqli_query($conn, $sql);
-    if ($result == 1) {
-        echo "<span class='ok_dati'>Dati eliminati correttamente</span>";
-    } else {
-        echo "<span class='ko_dati'>Chiama Tiziano</span>";
+        $result = mysqli_query($conn, $sql);
+        if ($result == 1) {
+            echo "<span class='ok_dati'>Dati eliminati correttamente</span>";
+        } else {
+            echo "<span class='ko_dati'>Chiama Tiziano</span>";
+        }
+    }
+    if (isset($_GET['type']) && $_GET['type'] == 'edit') {
+        echo "<span class='ok_dati'>Dati modificati correttamente</span>";
     }
 
     // fa aprire il pannello corrispondente
@@ -152,8 +157,8 @@ $result_laboratori = mysqli_query($conn, $sql);
                             <th>Costo</th>
                             <th>Dettagli</th>
                             <th>Note</th>
-                            <th>M</th>
-                            <th>E</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -164,8 +169,16 @@ $result_laboratori = mysqli_query($conn, $sql);
                             echo "<td>" . $row["DATA"] . "</td>";
                             echo "<td>" . $row["LUOGO"] . "</td>";
                             echo "<td>" . $row["COSTO"] . "</td>";
-                            echo "<td>" . $row["DETTAGLI"] . "</td>";
-                            echo "<td>" . $row["NOTE"] . "</td>";
+                            echo "<td><button type='button' class='btn btn-info ";
+                            if (trim($row["DETTAGLI"]) == '') {
+                                echo "disabled";
+                            }
+                            echo "' data-toggle='tooltip' data-placement='top' title='" . $row["DETTAGLI"] . "' >Vedi</button></td>";
+                            echo "<td><button type='button' class='btn btn-info ";
+                            if (trim($row["NOTE"]) == '') {
+                                echo "disabled";
+                            }
+                            echo "' data-toggle='tooltip' data-placement='top' title='" . $row["NOTE"] . "' >Vedi</button></td>";
                             echo "<td><input type='button' class='btn btn-primary' value='Modifica' onclick='location.href = \"http:\\inserimento_dati.php?type=mod&cat=vendemmie&ID=" . $row["ID"] . "\";'></td>";
                             echo "<td><input type='button' class='btn btn-danger' value='Elimina' onclick='location.href = \"http:\\dati_generali.php?type=del&cat=vendemmie&ID=" . $row["ID"] . "\";'></td>";
                             echo "</tr>";
@@ -193,8 +206,8 @@ $result_laboratori = mysqli_query($conn, $sql);
                             <th>Nome</th>
                             <th>Data Imbottigliamento</th>
                             <th>Note</th>
-                            <th>M</th>
-                            <th>E</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -206,7 +219,11 @@ $result_laboratori = mysqli_query($conn, $sql);
                             echo "<td>" . $row["VINI_ANNATA"] . "</td>";
                             echo "<td>" . $row["VINI_NOME"] . "</td>";
                             echo "<td>" . $row["VINI_DATA_IMBOTTIGLIAMENTO"] . "</td>";
-                            echo "<td>" . $row["VINI_NOTE"] . "</td>";
+                            echo "<td><button type='button' class='btn btn-info ";
+                            if (trim($row["VINI_NOTE"]) == '') {
+                                echo "disabled";
+                            }
+                            echo "' data-toggle='tooltip' data-placement='top' title='" . $row["VINI_NOTE"] . "' >Vedi</button></td>";
                             echo "<td><input type='button' class='btn btn-primary' value='Modifica' onclick='location.href = \"http:\\inserimento_dati.php?type=mod&cat=vini&ID=" . $row["VINI_ID"] . "\";'></td>";
                             echo "<td><input type='button' class='btn btn-danger' value='Elimina' onclick='location.href = \"http:\\dati_generali.php?type=del&cat=vini&ID=" . $row["VINI_ID"] . "\";'></td>";
                             echo "</tr>";
@@ -252,6 +269,7 @@ $result_laboratori = mysqli_query($conn, $sql);
                             echo "<td>" . $row["ID"] . "</td>";
                             echo "<td>" . $row["VINI_NOME"] . "</td>";
                             echo "<td>" . $row["LABORATORI_NOME"] . "</td>";
+                            echo "<td>" . $row["DATA"] . "</td>";
                             echo "<td>" . $row["TITOLO_ALCOLOMETRICO_VOLUMICO"] . " " . $row["TITOLO_ALCOLOMETRICO_VOLUMICO_UM"] . "</td>";
                             echo "<td>" . $row["ACIDITA_TOTALE"] . " " . $row["ACIDITA_TOTALE_UM"] . "</td>";
                             echo "<td>" . $row["ACIDITA_VOLATILE"] . " " . $row["ACIDITA_VOLATILE_UM"] . "</td>";
@@ -259,8 +277,16 @@ $result_laboratori = mysqli_query($conn, $sql);
                             echo "<td>" . $row["PH"] . "</td>";
                             echo "<td>" . $row["ACIDO_L_MALICO"] . " " . $row["ACIDO_L_MALICO_UM"] . "</td>";
                             echo "<td>" . $row["ACIDO_L_LATTICO"] . " " . $row["ACIDO_L_LATTICO_UM"] . "</td>";
-                            echo "<td>" . $row["TRATTAMENTO_CONSIGLIATO"] . "</td>";
-                            echo "<td>" . $row["NOTE"] . "</td>";
+                            echo "<td><button type='button' class='btn btn-info ";
+                            if (trim($row["TRATTAMENTO_CONSIGLIATO"]) == '') {
+                                echo "disabled";
+                            }
+                            echo "' data-toggle='tooltip' data-placement='top' title='" . $row["TRATTAMENTO_CONSIGLIATO"] . "'>Vedi</button></td>";
+                            echo "<td><button type='button' class='btn btn-info ";
+                            if (trim($row["NOTE"]) == '') {
+                                echo "disabled";
+                            }
+                            echo "' data-toggle='tooltip' data-placement='top' title='" . $row["NOTE"] . "' >Vedi</button></td>";
                             echo "<td><input type='button' class='btn btn-primary' value='Modifica' onclick='location.href = \"http:\\inserimento_dati.php?type=mod&cat=analisi&ID=" . $row["ID"] . "\";'></td>";
                             echo "<td><input type='button' class='btn btn-danger' value='Elimina' onclick='location.href = \"http:\\dati_generali.php?type=del&cat=analisi&ID=" . $row["ID"] . "\";'></td>";
                             echo "</tr>";
@@ -297,7 +323,11 @@ $result_laboratori = mysqli_query($conn, $sql);
                             echo "<td>" . $row["ID"] . "</td>";
                             echo "<td>" . $row["NOME"] . "</td>";
                             echo "<td>" . $row["EMAIL"] . "</td>";
-                            echo "<td>" . $row["NOTE"] . "</td>";
+                            echo "<td><button type='button' class='btn btn-info ";
+                            if (trim($row["NOTE"]) == '') {
+                                echo "disabled";
+                            }
+                            echo "' data-toggle='tooltip' data-placement='top' title='" . $row["NOTE"] . "' >Vedi</button></td>";
                             echo "<td><input type='button' class='btn btn-primary' value='Modifica' onclick='location.href = \"http:\\inserimento_dati.php?type=mod&cat=laboratori&ID=" . $row["ID"] . "\";'></td>";
                             echo "<td><input type='button' class='btn btn-danger' value='Elimina' onclick='location.href = \"http:\\dati_generali.php?type=del&cat=laboratori&ID=" . $row["ID"] . "\";'></td>";
                             echo "</tr>";
