@@ -1,13 +1,24 @@
 $(document).ready(function () {
     console.log("ready!");
-$(".navbar-nav").on("click", function(){
-    console.log("click nav");
-   $("li.active").removeClass("active");
-   $(this).addClass("active");
-});
+    $(".generate").click(function () {
+        var form = document.getElementById('gestione_bottiglie');
+        form.action = "#";
+        form.submit();
+    });
+    $(".insert_db").click(function () {
+        var form = document.getElementById('gestione_bottiglie');
+        form.action = "insert_db.php";
+        form.submit();
+    });
+    $(".navbar-nav").on("click", function () {
+        console.log("click nav");
+        $("li.active").removeClass("active");
+        $(this).addClass("active");
+    });
     $('.datepicker').datepicker({
         format: 'dd/mm/yyyy',
-        startDate: '-3d'
+        startDate: '-3d',
+        maxDate: new Date('26/03/2018')
     });
     $('.aggiungi_persona').click(function () {
         console.log('aggiungi_persona');
@@ -54,4 +65,8 @@ $(".navbar-nav").on("click", function(){
         }
         $(".totale_persone").val($(".container_member .row_ute").length);
     }
+     $('#tab_vendemmie').DataTable();
+     $('#tab_vini').DataTable();
+     $('#tab_analisi').DataTable();
+     $('#tab_laboratori').DataTable();
 });

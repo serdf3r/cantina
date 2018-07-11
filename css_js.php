@@ -8,7 +8,8 @@
 <link rel="stylesheet" href="datepicker/css/datepicker.css">
 <!-- General CSS -->
 <link rel="stylesheet" href="css/general.css">
-
+<!-- Datatable -->
+<link rel="stylesheet" href="datatable/datatables.css">
 
 <script src="js/jquery-3.1.1.slim.min.js"  crossorigin="anonymous"></script>
 <script src="js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
@@ -20,3 +21,6 @@
 
 <!-- Datepicker -->
 <script src="datepicker/js/bootstrap-datepicker.js"></script>
+
+<!-- Datatable -->
+<script src="datatable/datatables.js"></script>

@@ -1,6 +1,6 @@
 <?php
 include 'general_top.php';
-            
+     include 'main_form.php';       
             ?>
         </div>
         <canvas id="chart_temperature" width="400" height="100"></canvas>

@@ -1,5 +1,5 @@
 </div><div class="panel">
-    <footer class="footer fixed-bottom">
+    <footer class="footer fixed-bottom" id="gatto">
     <?php
                // Create connection
             $conn = mysqli_connect($servername, $username, $password, $dbname);

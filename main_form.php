@@ -5,7 +5,7 @@
             <div class="col-sm-2">
                 <input type="text" class="form-control datepicker" readonly='true' data-date-format="mm/dd/yyyy"id="dal" name="dal" placeholder="<?php
                 if (!isset($_POST["dal"]) || $_POST["dal"] == '') {
-                     echo date('d/m/Y', strtotime('-6 months'));
+                    echo date('d/m/Y', strtotime('-6 months'));
                 } else {
                     echo $_POST["dal"];
                 }
@@ -16,7 +16,7 @@
                 <input type="text" class="form-control datepicker" readonly='true' data-date-format="mm/dd/yyyy" id="al" name="al"  placeholder="
                 <?php
                 if (!isset($_POST["al"]) || $_POST["al"] == '') {
-                      echo date('d/m/Y');
+                    echo date('d/m/Y');
                 } else {
                     echo $_POST["al"];
                 }

@@ -7,21 +7,31 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item ">
-                <a class="nav-link btn" href="dati_generali.php">Dati Generali </a>
+                <a class="nav-link btn" href="inserimento_dati.php">Inserimento Dati </a>
             </li>
+            <li class="nav-item ">
+                <a class="nav-link btn" href="dati_generali.php">Visualizzazione Dati</a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link btn disabled" href="ricerca_specifica.php">Ricerca specifica </a>
+            </li>
+            
             <li class="nav-item">
                 <a class="nav-link btn disabled" href="anno_corrente.php">Anno Corrente</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link  btn disabled" href="storico.php">Storico</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link btn disabled" href="analisi_vino.php">Analisi Vino</a>
+            </li>
              <li class="nav-item">
                 <a class="nav-link btn" href="gestione_bottiglie.php">Gestisci Bottiglie</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+<!--        <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Cerca qualcosa">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Cerca</button>
-        </form>
+        </form>-->
     </div>
 </nav>

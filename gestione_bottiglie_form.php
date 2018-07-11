@@ -1,5 +1,5 @@
 <div class="navbar main_menu ">
-    <form action="gestione_bottiglie_response.php" method="post">
+    <form action="#" method="post" id="gestione_bottiglie">
         <div class="form-group">
             <div class=" row">
                 <label for="anno_vino" class="col-sm-1 control-label">Anno</label>
@@ -51,9 +51,17 @@
             <div class="row row_gest pull-right">
                 <input type="hidden" name="totale_persone" value="" class="totale_persone">
                 <button type="button" class="btn btn-success aggiungi_persona">Aggiungi Persona</button>
-                <button type="submit" class="btn btn-primary">Genera</button>
+                <button type="button" class="btn btn-primary generate">Genera</button>
+                <?php
+                if (isset($_POST["anno_vino"])) {
+                    ?>
+                 <button type="button" class="btn btn-primary insert_db">Conferma ed inserisci nel DB</button>
+                <?php
+                }
+                ?>
             </div>
         </div>
     </form>
+    
 
 </div>
