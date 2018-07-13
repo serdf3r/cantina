@@ -4,31 +4,19 @@
 // Create connection
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-$vendemmie = '';
-$vini = '';
-$analisi = '';
-$laboratori = '';
+$vendemmie = null;
+$vini = null;
+$analisi = null;
+$laboratori = null;
+$rabbocchi = null;
 if (isset($_GET['cat'])) {
     $sql = "SELECT * FROM " . strtoupper($_GET['cat']) . " WHERE ID=" . $_GET['ID'] . "";
-
     $result_{$_GET['cat']} = mysqli_query($conn, $sql);
     foreach ($result_{$_GET['cat']} as $row_{$_GET['cat']}) {
-//         print_r($row_{$_GET['cat']});
-//         echo "-".$_GET['cat']."-";
-//          print_r($row_vini);
+        
     }
-//     print_r($row_{'vini'}['NOME']);
-//     exit;
-//    if ($result == 1) {
-//        echo "<span class='ok_dati'>Dati caricati correttamente</span>";
-//    } else {
-//        echo "<span class='ko_dati'>Chiama Tiziano</span>";
-//    }
-    // fa aprire il pannello corrispondente
     ${$_GET['cat']} = "show";
 }
-
-
 
 
 if (isset($_POST["vendemmia_luogo"])) {
@@ -47,6 +35,7 @@ if (isset($_POST["vendemmia_luogo"])) {
     } else {
         $sql = "INSERT INTO VENDEMMIE VALUES('','$vendemmia_data', '$vendemmia_luogo', '$vendemmia_costo','$vendemmia_dettagli','$vendemmia_note') ";
     }
+    print_r($sql);
     $result = mysqli_query($conn, $sql);
     if ($result == 1) {
         echo "<span class='ok_dati'>Dati inseriti correttamente</span>";
@@ -179,6 +168,31 @@ if (isset($_POST["laboratorio_nome"])) {
         echo "<span class='ok_dati'>Dati inseriti correttamente</span>";
         if (isset($_POST["edit"]) && $_POST["edit"] == 'edit') {
             header("location: http:\\cantina\dati_generali.php?type=edit&cat=laboratori");
+        }
+    } else {
+        echo "<span class='ko_dati'>Chiama Tiziano</span>";
+    }
+}
+if (isset($_POST["rabbocchi_data"])) {
+    // echo "rabbocchi_data";
+    $rabbocchi_data = $_POST["rabbocchi_data"];
+    $rabbocchi_nome_vino = $_POST["rabbocchi_nome_vino"];
+    $rabbocchi_note = $_POST["rabbocchi_note"];
+
+    // convert date
+    $rabbocchi_data = str_replace('/', '-', $rabbocchi_data);
+    $rabbocchi_data = date('Y-m-d', strtotime($rabbocchi_data));
+    if (isset($_POST["edit"]) && $_POST["edit"] == 'edit') {
+        $rabbocchi_id = $_POST["ID"];
+        $sql = "UPDATE RABBOCCHI SET ID_VINI ='$rabbocchi_nome_vino', DATA='$rabbocchi_data', NOTE='$rabbocchi_note' WHERE ID=$rabbocchi_id";
+    } else {
+        $sql = "INSERT INTO RABBOCCHI VALUES('','$rabbocchi_nome_vino', '$rabbocchi_data', '$rabbocchi_note') ";
+    }
+    $result = mysqli_query($conn, $sql);
+    if ($result == 1) {
+        echo "<span class='ok_dati'>Dati inseriti correttamente</span>";
+        if (isset($_POST["edit"]) && $_POST["edit"] == 'edit') {
+            header("location: http:\\cantina\dati_generali.php?type=edit&cat=rabbocchi");
         }
     } else {
         echo "<span class='ko_dati'>Chiama Tiziano</span>";
@@ -625,6 +639,71 @@ $result_vendemmie = mysqli_query($conn, $sql_vendemmie);
                                 <div class="col-sm-12"><button class="btn btn-primary" type="submit">Modifica Laboratorio</button></div>
                             <?php } else { ?>
                                 <div class="col-sm-12"><button class="btn btn-primary" type="submit">Inserisci Laboratorio</button></div>
+                            <?php } ?>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#pannello-5">Rabbocchi</a>
+                </h4>
+            </div>
+            <div id="pannello-5" class="panel-collapse collapse in <?php echo $rabbocchi; ?> ">
+                <div class="panel-body">
+                    <form action="#" method="post" id="inserimento_rabbocchi">
+                        <div class="row">
+                            <div class="col-sm-12 titoletto">Inserimento Rabbocco</div>        
+                            <label for="rabbocchi_data" class="col-sm-1 control-label">Data</label>
+                            <div class="col-sm-1">
+                                <input type="text" class="form-control datepicker" data-date-format="mm/dd/yyyy" id="rabbocchi_data" name="rabbocchi_data" placeholder="" value="<?php
+                                if (isset($row_{'rabbocchi'}['DATA'])) {
+                                    // convert date
+                                    $rabbocchi_data = $row_{'rabbocchi'}['DATA'];
+                                    $rabbocchi_data = date('d-m-Y', strtotime($rabbocchi_data));
+                                    $rabbocchi_data = str_replace('-', '/', $rabbocchi_data);
+
+                                    echo $rabbocchi_data;
+                                }
+                                ?>">
+                            </div>
+                            <label for="rabbocchi_nome_vino" class="col-sm-1 control-label">Vino</label>
+                            <div class="col-sm-2">
+                                <?php
+                                $sql_vini = "SELECT ID, NOME, ANNATA FROM VINI";
+                                $result_vini_rabbocchi = mysqli_query($conn, $sql_vini);
+                                ?>
+                                <select name="rabbocchi_nome_vino">                                 
+                                    <?php
+                                    while ($row_vini = mysqli_fetch_array($result_vini_rabbocchi)) {
+                                        echo "<option value='" . $row_vini['ID'] . "'";
+                                        if (isset($row_{'rabbocchi'}['ID_VINI'])) {
+                                            if ($row_{'rabbocchi'}['ID_VINI'] == $row_vini['ID']) {
+                                                echo " selected='selected' ";
+                                            }
+                                        }
+                                        echo ">" . $row_vini['NOME'] . " " . $row_vini['ANNATA'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-sm-7"></div>
+                            <label for="rabbocchi_note" class="col-sm-1 control-label">Note</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control"  id="rabbocchi_note" name="rabbocchi_note" ><?php
+                                    if (isset($row_{'rabbocchi'}['NOTE'])) {
+                                        echo $row_{'rabbocchi'}['NOTE'];
+                                    }
+                                    ?></textarea>
+                            </div>
+                            <?php if (isset($rabbocchi)) { ?>
+                                <input type="hidden" value="edit" name="edit">
+                                <input type="hidden" value="<?php echo $row_{'rabbocchi'}['ID']; ?>" name="ID">
+                                <div class="col-sm-12"><button class="btn btn-primary" type="submit">Modifica Rabbocco</button></div>
+                            <?php } else { ?>
+                                <div class="col-sm-12"><button class="btn btn-primary" type="submit">Inserisci Rabbocco</button></div>
                             <?php } ?>
                         </div>
                     </form>

@@ -35,11 +35,11 @@ $(document).ready(function () {
         console.log(numItems);
         var numItems_add = numItems + 1;
         $(".container_member").append('<div class="row row_ute">'
-                + '<label class="col-sm-2 control-label pull-right">Nome</label>'
+                + '<label class="col-sm-1 control-label pull-right">Nome</label>'
                 + '<div class="col-sm-3">'
                 + '<input type="text" class="form-control" name="nome_ute_' + numItems_add + '"  placeholder="---">'
                 + '</div>'
-                + '<button type="button" class="col-sm-2 btn elimina_persona btn-danger">elmina</button>'
+                + '<div class="col-sm-1"><button type="button" class="btn elimina_persona btn-danger">elimina</button></div>'
                 + '</div>'
                 );
         change_name();
@@ -73,6 +73,7 @@ $(document).ready(function () {
         "scrollX": true
     });
     $('#tab_laboratori').DataTable();
+     $('#tab_rabbocchi').DataTable();
 
     $('#inserimento_vendemmia :input').keydown(function (e) {
         console.log("Element changed inserimento_vendemmia");
@@ -139,6 +140,23 @@ $(document).ready(function () {
     });
     $('#inserimento_laboratorio').submit(function (event) {
         if ($("#laboratorio_nome").val() == '') {
+           alert("Il nome non può essere vuoto");           
+            return false;            
+        } else {
+            return;
+        }
+    });
+       $('#inserimento_rabbocchi :input').keydown(function (e) {
+        console.log("Element changed inserimento_rabbocchi");
+        if ($("#rabbocchi_data").val() == '' ) {
+            $('#inserimento_rabbocchi .btn-primary').addClass('disabled');
+        } else {
+            $('#inserimento_rabbocchi .btn-primary').removeClass('disabled');
+        }
+
+    });
+    $('#inserimento_rabbocchi').submit(function (event) {
+        if ($("#rabbocchi_data").val() == '') {
            alert("Il nome non può essere vuoto");           
             return false;            
         } else {

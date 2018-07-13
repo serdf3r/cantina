@@ -7,6 +7,7 @@ $vendemmie = '';
 $vini = '';
 $analisi = '';
 $laboratori = '';
+$rabbocchi = '';
 if (isset($_GET['cat'])) {
     if (isset($_GET['type']) && $_GET['type'] == 'del') {
         $sql = "DELETE FROM " . strtoupper($_GET['cat']) . " WHERE ID=" . $_GET['ID'] . "";
@@ -116,6 +117,8 @@ $sql = "SELECT ANALISI.*, VINI.NOME AS VINI_NOME , LABORATORI.NOME AS LABORATORI
 $result_analisi = mysqli_query($conn, $sql);
 $sql = "SELECT * FROM LABORATORI ORDER BY ID DESC";
 $result_laboratori = mysqli_query($conn, $sql);
+$sql = "SELECT RABBOCCHI.* , VINI.NOME AS VINI_NOME FROM RABBOCCHI LEFT JOIN VINI ON RABBOCCHI.ID_VINI  = VINI.ID ORDER BY ID DESC";
+$result_rabbocchi = mysqli_query($conn, $sql);
 ?>
 <div class="panel-group" id="accordion">
     <div class="panel panel-primary">
@@ -305,7 +308,7 @@ $result_laboratori = mysqli_query($conn, $sql);
         </div>
         <div id="pannello-5" class="panel-collapse collapse in <?php echo $laboratori; ?> ">
             <div class="panel-body">
-                <table id="tab_vendemmie" class="display" style="width:100%">
+                <table id="tab_laboratori" class="display" style="width:100%">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -330,6 +333,47 @@ $result_laboratori = mysqli_query($conn, $sql);
                             echo "' data-toggle='tooltip' data-placement='top' title='" . $row["NOTE"] . "' >Vedi</button></td>";
                             echo "<td><input type='button' class='btn btn-primary' value='Modifica' onclick='location.href = \"http:\\inserimento_dati.php?type=mod&cat=laboratori&ID=" . $row["ID"] . "\";'></td>";
                             echo "<td><input type='button' class='btn btn-danger' value='Elimina' onclick='location.href = \"http:\\dati_generali.php?type=del&cat=laboratori&ID=" . $row["ID"] . "\";'></td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>                    
+                </table> 
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#pannello-6">Rabbocchi</a>
+            </h4>
+        </div>
+        <div id="pannello-6" class="panel-collapse collapse in <?php echo $rabbocchi; ?> ">
+            <div class="panel-body">
+                <table id="tab_rabbocchi" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Data</th>
+                            <th>Vino</th>
+                            <th>Note</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        while ($row = mysqli_fetch_assoc($result_rabbocchi)) {
+                            echo "<tr>";
+                            echo "<td>" . $row["ID"] . "</td>";
+                            echo "<td>" . $row["DATA"] . "</td>";
+                            echo "<td>" . $row["VINI_NOME"] . "</td>";
+                            echo "<td><button type='button' class='btn btn-info ";
+                            if (trim($row["NOTE"]) == '') {
+                                echo "disabled";
+                            }
+                            echo "' data-toggle='tooltip' data-placement='top' title='" . $row["NOTE"] . "' >Vedi</button></td>";
+                            echo "<td><input type='button' class='btn btn-primary' value='Modifica' onclick='location.href = \"http:\\inserimento_dati.php?type=mod&cat=rabbocchi&ID=" . $row["ID"] . "\";'></td>";
+                            echo "<td><input type='button' class='btn btn-danger' value='Elimina' onclick='location.href = \"http:\\dati_generali.php?type=del&cat=rabbocchi&ID=" . $row["ID"] . "\";'></td>";
                             echo "</tr>";
                         }
                         ?>
