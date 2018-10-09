@@ -1,0 +1,7 @@
+PHP Warning:  mysqli::__construct(): (HY000/2002): Connection refused in /opt/lampp/htdocs/cantina/cron_backup.php on line 20
+PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /opt/lampp/htdocs/cantina/cron_backup.php on line 25
+PHP Fatal error:  Uncaught Error: Call to a member function fetch_row() on null in /opt/lampp/htdocs/cantina/cron_backup.php:26
+Stack trace:
+#0 /opt/lampp/htdocs/cantina/cron_backup.php(10): backupDatabaseTables('127.0.0.1', 'root', '', 'cantina', Array)
+#1 {main}
+  thrown in /opt/lampp/htdocs/cantina/cron_backup.php on line 26
